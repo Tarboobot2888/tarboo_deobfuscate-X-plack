@@ -1,12 +1,16 @@
 /* globals.css */
 @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+:root{--bg:#fafafa;--text:#111}.dark{--bg:#0f0f1a;--text:#33ffcc}
+
 
 body {
-  background-color: #0f0f1a;
-  color: #33ffcc;
+  background-color: var(--bg);
   font-family: 'Share Tech Mono', monospace, monospace;
-  margin: 0;
   padding: 0;
+  margin: 0;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -36,7 +40,7 @@ nav {
 }
 
 nav a {
-  color: #00ffcc;
+  color: var(--text);
   text-decoration: none;
   font-weight: bold;
   margin: 0 15px;
@@ -163,3 +167,26 @@ button:hover:not(:disabled) {
   padding: 20px;
   box-shadow: 0 0 10px #00ffff;
 }
+
+/* Dropzone */
+.dropzone {
+  border: 2px dashed #33ffcc;
+  padding: 20px;
+  text-align: center;
+  margin-bottom: 20px;
+  transition: background 0.3s ease;
+}
+.dropzone.active {
+  background: rgba(51, 255, 204, 0.1);
+}
+
+.toggle-theme {
+  margin-left: auto;
+  background: #222;
+  color: #33ffcc;
+  border: 1px solid #33ffcc;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
