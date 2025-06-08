@@ -1,0 +1,10 @@
+:root {
+  --bg: #0f0f1a;
+  --text: #33ffcc;
+  --accent: #c026d3;
+}
+
+body {
+  background-color: var(--bg);
+  color: var(--text);
+}

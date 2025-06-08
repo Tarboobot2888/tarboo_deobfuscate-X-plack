@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router'
-import Header from '../components/Header'
+import NavBar from '../components/NavBar'
 import Footer from '../components/Footer'
 import Sidebar from '../components/Sidebar'
 
@@ -11,7 +11,7 @@ export default function Tools() {
     <main className="container flex">
       <Sidebar />
       <div className="flex-1 p-4">
-        <Header />
+        <NavBar />
         <h2 className="mb-4">الأدوات الإضافية</h2>
         {recipe ? (
           <p>الوصفة المختارة: {recipe}</p>

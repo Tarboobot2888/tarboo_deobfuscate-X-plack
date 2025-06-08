@@ -3,11 +3,12 @@ import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import axios from 'axios'
 import DropZone from '../components/DropZone'
-import Header from '../components/Header'
+import NavBar from '../components/NavBar'
 import Footer from '../components/Footer'
 import CodeEditor from '../components/CodeEditor'
 import ResultsPanel from '../components/ResultsPanel'
 import Loader from '../components/Loader'
+import AnimationIntro from '../components/AnimationIntro'
 import { toast } from 'react-toastify'
 
 export default function Home() {
@@ -16,6 +17,12 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
   const [method, setMethod] = useState<"local" | "openai">("local");
   const [error, setError] = useState<string | null>(null);
+  const [intro, setIntro] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setIntro(false), 1500);
+    return () => clearTimeout(timer);
+  }, []);
 
   // سجل الاستخدام في localStorage
   useEffect(() => {
@@ -57,7 +64,8 @@ export default function Home() {
 
   return (
     <main className="container">
-      <Header />
+      {intro && <AnimationIntro onDone={() => setIntro(false)} />}
+      <NavBar />
 
       <motion.section
         className="hero"
