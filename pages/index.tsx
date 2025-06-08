@@ -1,15 +1,14 @@
 // pages/index.tsx
-import { useState, useEffect } from "react";
-import dynamic from "next/dynamic";
-import { motion } from "framer-motion";
-import { deobfuscateLocal } from "../lib/webcrack-wrapper";
-import axios from "axios";
-import Link from "next/link";
-import DropZone from "../components/DropZone";
-import ThemeToggle from "../components/ThemeToggle";
-import { toast } from "react-toastify";
-
-const MonacoEditor = dynamic(() => import("@monaco-editor/react"), { ssr: false });
+import { useState, useEffect } from 'react'
+import { motion } from 'framer-motion'
+import axios from 'axios'
+import DropZone from '../components/DropZone'
+import Header from '../components/Header'
+import Footer from '../components/Footer'
+import CodeEditor from '../components/CodeEditor'
+import ResultsPanel from '../components/ResultsPanel'
+import Loader from '../components/Loader'
+import { toast } from 'react-toastify'
 
 export default function Home() {
   const [code, setCode] = useState("");
@@ -58,13 +57,7 @@ export default function Home() {
 
   return (
     <main className="container">
-      <header className="flex items-center gap-4">
-        <h1 className="flex-1">TARBOO Deobfuscate</h1>
-        <ThemeToggle />
-        <nav>
-          <Link href="/history">سجل الاستخدام</Link>
-        </nav>
-      </header>
+      <Header />
 
       <motion.section
         className="hero"
@@ -83,26 +76,8 @@ export default function Home() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <label>الكود المشفر:</label>
-            <MonacoEditor
-              height="300px"
-              defaultLanguage="javascript"
-              value={code}
-              onChange={(value) => setCode(value || '')}
-              theme="vs-dark"
-            />
+            <CodeEditor value={code} onChange={setCode} />
           </div>
-          {output && (
-            <div>
-              <label>النتيجة المفكوكة:</label>
-              <MonacoEditor
-                height="300px"
-                defaultLanguage="javascript"
-                value={output}
-                options={{ readOnly: true }}
-                theme="vs-dark"
-              />
-            </div>
-          )}
         </div>
 
         <div className="method-select">
@@ -125,10 +100,11 @@ export default function Home() {
         </div>
 
         <button onClick={handleDecode} disabled={loading || !code.trim()}>
-          {loading ? "جاري فك التشفير..." : "فك التشفير"}
+          {loading ? <Loader /> : 'فك التشفير'}
         </button>
 
         {error && <p className="error">{error}</p>}
+        <ResultsPanel output={output} />
       </section>
 
       <section className="features-grid">
@@ -141,6 +117,7 @@ export default function Home() {
           <p>تشغيل وصفات تحليل متعددة مثل Beautify وEval JS.</p>
         </div>
       </section>
+      <Footer />
     </main>
   );
 }
