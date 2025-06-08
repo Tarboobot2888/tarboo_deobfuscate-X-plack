@@ -5,7 +5,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Fira+Code&display=swap');
 
 body {
-  @apply bg-neutral-950 text-gray-200 font-sans;
+  @apply min-h-screen bg-gradient-to-br from-[#050507] via-[#0b0c11] to-[#070b13] text-gray-200 font-sans leading-relaxed antialiased;
 }
 
 pre {
@@ -17,7 +17,7 @@ pre {
 }
 
 button {
-  @apply px-5 py-2 rounded-md font-bold bg-cyan-500 text-black transition hover:bg-cyan-400 disabled:opacity-60 disabled:cursor-not-allowed;
+  @apply px-6 py-2 rounded-md font-semibold shadow-md bg-gradient-to-r from-cyan-500 to-purple-500 text-black transition hover:from-cyan-400 hover:to-purple-400 disabled:opacity-60 disabled:cursor-not-allowed;
 }
 
 .dropzone {
