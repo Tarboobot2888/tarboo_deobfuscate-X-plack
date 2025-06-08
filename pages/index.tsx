@@ -4,117 +4,127 @@ import { motion } from "framer-motion";
 import { deobfuscateLocal } from "../lib/webcrack-wrapper";
 import axios from "axios";
 import Link from "next/link";
+import Layout from "../components/Layout";
+import HeroSection from "../components/HeroSection";
+import AnimationIntro from "../components/AnimationIntro";
+import FeaturesSection from "../components/FeaturesSection";
+import { useRouter } from "next/router";
 
 export default function Home() {
+  const [intro, setIntro] = useState(true);
   const [code, setCode] = useState("");
-  const [output, setOutput] = useState("");
+  const [method, setMethod] = useState("local");
   const [loading, setLoading] = useState(false);
-  const [method, setMethod] = useState<"local" | "openai">("local");
-  const [error, setError] = useState<string | null>(null);
+  const [output, setOutput] = useState("");
+  const [error, setError] = useState("");
+  const router = useRouter();
 
-  // سجل الاستخدام في localStorage
   useEffect(() => {
-    if (output) {
-      const history = JSON.parse(localStorage.getItem("history") || "[]");
-      localStorage.setItem(
-        "history",
-        JSON.stringify([{ input: code, output, method, timestamp: Date.now() }, ...history].slice(0, 30))
-      );
-    }
-  }, [output]);
+    const timer = setTimeout(() => setIntro(false), 1500);
+    return () => clearTimeout(timer);
+  }, []);
 
-  async function handleDecode() {
-  setError(null);
-  setOutput("");
-  setLoading(true);
-  try {
-    if (method === "local") {
-      const response = await axios.post("/api/deobfuscate-local", { code });
-      setOutput(response.data.decoded);
-    } else {
-      const response = await axios.post("/api/openai-decode", { code });
-      setOutput(response.data.decoded);
+  const handleDecode = async () => {
+    setLoading(true);
+    setError("");
+    setOutput("");
+
+    try {
+      if (method === "local") {
+        const result = await deobfuscateLocal(code);
+        setOutput(result);
+      } else {
+        const response = await axios.post("/api/deobfuscate", { code });
+        setOutput(response.data.result || "لا يوجد ناتج.");
+      }
+    } catch (err) {
+      setError("حدث خطأ أثناء فك التشفير.");
+    } finally {
+      setLoading(false);
     }
-  } catch (e: any) {
-    setError(e.message || "حدث خطأ أثناء فك التشفير");
-  }
-  setLoading(false);
-}
+  };
 
   return (
-    <main className="container">
-      <header>
-        <h1>TARBOO Deobfuscate</h1>
-        <nav>
-          <Link href="/history">سجل الاستخدام</Link>
-        </nav>
-      </header>
+    <Layout>
+      {intro && <AnimationIntro onDone={() => setIntro(false)} />}
+      <HeroSection onStart={() => router.push("/deobfuscate")} />
+      <FeaturesSection />
 
-      <motion.section
-        className="hero"
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.7 }}
-      >
-        <h2>فكّ تشفير الكود بضغطة زر</h2>
-        <button className="start-btn" onClick={() => window.scrollTo({ top: 500, behavior: 'smooth' })}>
-          ابدأ الآن
-        </button>
-      </motion.section>
+      <main className="container">
+        <header>
+          <h1>TARBOO Deobfuscate</h1>
+          <nav>
+            <Link href="/history">سجل الاستخدام</Link>
+          </nav>
+        </header>
 
-      <section>
-        <label>ألصق الكود المشفر هنا:</label>
-        <textarea
-          className="code-input"
-          value={code}
-          onChange={(e) => setCode(e.target.value)}
-          rows={10}
-          placeholder="أدخل كود Node.js المشفر أو المشوش"
-        />
+        <motion.section
+          className="hero"
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7 }}
+        >
+          <h2>فكّ تشفير الكود بضغطة زر</h2>
+          <button className="start-btn" onClick={() => window.scrollTo({ top: 500, behavior: "smooth" })}>
+            ابدأ الآن
+          </button>
+        </motion.section>
 
-        <div className="method-select">
-          <label>
-            <input
-              type="radio"
-              checked={method === "local"}
-              onChange={() => setMethod("local")}
-            />
-            فك تشفير محلي (سريع، بدون إنترنت)
-          </label>
-          <label>
-            <input
-              type="radio"
-              checked={method === "openai"}
-              onChange={() => setMethod("openai")}
-            />
-            فك تشفير OpenAI (أكثر دقة، يحتاج إنترنت)
-          </label>
-        </div>
+        <section>
+          <label>ألصق الكود المشفر هنا:</label>
+          <textarea
+            className="code-input"
+            value={code}
+            onChange={(e) => setCode(e.target.value)}
+            rows={10}
+            placeholder="أدخل كود Node.js المشفر أو المشوش"
+          />
 
-        <button onClick={handleDecode} disabled={loading || !code.trim()}>
-          {loading ? "جاري فك التشفير..." : "فك التشفير"}
-        </button>
+          <div className="method-select">
+            <label>
+              <input
+                type="radio"
+                checked={method === "local"}
+                onChange={() => setMethod("local")}
+              />
+              فك تشفير محلي (سريع، بدون إنترنت)
+            </label>
+            <label>
+              <input
+                type="radio"
+                checked={method === "openai"}
+                onChange={() => setMethod("openai")}
+              />
+              فك تشفير OpenAI (أكثر دقة، يحتاج إنترنت)
+            </label>
+          </div>
 
-        {error && <p className="error">{error}</p>}
+          <button onClick={handleDecode} disabled={loading || !code.trim()}>
+            {loading ? "جاري فك التشفير..." : "فك التشفير"}
+          </button>
 
-        {output && (
-          <>
-            <label>النتيجة المفكوكة:</label>
-            <pre className="code-output">{output}</pre>
-          </>
-        )}
-      </section>
+          {error && <p className="error">{error}</p>}
 
-      <section className="features-grid">
-        <div className="feature-item">
-          <h3>DeobfuscateJs</h3>
-          <p>خوارزميات متقدمة لفك التشويش عبر Web Workers.</p>
-        </div>
-        <div className="feature-item">
-          <h3>CyberChef</h3>
-          <p>تشغيل وصفات تحليل متعددة مثل Beautify وEval JS.</p>
-        </div>
-      </section>
-    </main>
+          {output && (
+            <>
+              <label>النتيجة المفكوكة:</label>
+              <pre className="code-output">{output}</pre>
+            </>
+          )}
+        </section>
+
+        <section className="features-grid">
+          <div className="feature-item">
+            <h3>DeobfuscateJs</h3>
+            <p>خوارزميات متقدمة لفك التشويش عبر Web Workers.</p>
+          </div>
+          <div className="feature-item">
+            <h3>CyberChef</h3>
+            <p>تشغيل وصفات تحليل متعددة مثل Beautify وEval JS.</p>
+          </div>
+        </section>
+      </main>
+    </Layout>
   );
 }
+
