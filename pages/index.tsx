@@ -3,8 +3,8 @@ import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import axios from 'axios'
 import DropZone from '../components/DropZone'
-import NavBar from '../components/NavBar'
-import Footer from '../components/Footer'
+import Layout from '../components/Layout'
+import Hero from '../components/Hero'
 import CodeEditor from '../components/CodeEditor'
 import ResultsPanel from '../components/ResultsPanel'
 import Loader from '../components/Loader'
@@ -63,21 +63,9 @@ export default function Home() {
 }
 
   return (
-    <main className="container">
+    <Layout>
       {intro && <AnimationIntro onDone={() => setIntro(false)} />}
-      <NavBar />
-
-      <motion.section
-        className="hero"
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.7 }}
-      >
-        <h2>فكّ تشفير الكود بضغطة زر</h2>
-        <button className="start-btn" onClick={() => window.scrollTo({ top: 500, behavior: 'smooth' })}>
-          ابدأ الآن
-        </button>
-      </motion.section>
+      <Hero onStart={() => window.scrollTo({ top: 500, behavior: 'smooth' })} />
 
       <section>
         <DropZone onCode={setCode} />
@@ -115,17 +103,16 @@ export default function Home() {
         <ResultsPanel output={output} />
       </section>
 
-      <section className="features-grid">
-        <div className="feature-item">
-          <h3>DeobfuscateJs</h3>
+      <section className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
+        <div className="feature-item bg-neutral-900 p-6 rounded-lg shadow">
+          <h3 className="text-xl mb-2 font-bold">DeobfuscateJs</h3>
           <p>خوارزميات متقدمة لفك التشويش عبر Web Workers.</p>
         </div>
-        <div className="feature-item">
-          <h3>CyberChef</h3>
+        <div className="feature-item bg-neutral-900 p-6 rounded-lg shadow">
+          <h3 className="text-xl mb-2 font-bold">CyberChef</h3>
           <p>تشغيل وصفات تحليل متعددة مثل Beautify وEval JS.</p>
         </div>
       </section>
-      <Footer />
-    </main>
+    </Layout>
   );
 }

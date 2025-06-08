@@ -1,6 +1,7 @@
 // pages/history.tsx
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import Layout from "../components/Layout";
 
 interface HistoryItem {
   input: string;
@@ -25,11 +26,11 @@ export default function History() {
   }
 
   return (
-    <main className="container">
-      <header>
-        <h1>سجل الاستخدام</h1>
+    <Layout>
+      <header className="mb-4">
+        <h1 className="text-xl font-bold mb-2">سجل الاستخدام</h1>
         <nav>
-          <Link href="/">العودة لفك التشفير</Link>
+          <Link href="/" className="text-cyan-400 hover:underline">العودة لفك التشفير</Link>
         </nav>
       </header>
 
@@ -57,6 +58,6 @@ export default function History() {
           </button>
         )}
       </section>
-    </main>
+    </Layout>
   );
 }

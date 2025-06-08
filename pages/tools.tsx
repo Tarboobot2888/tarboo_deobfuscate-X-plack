@@ -1,6 +1,5 @@
 import { useRouter } from 'next/router'
-import NavBar from '../components/NavBar'
-import Footer from '../components/Footer'
+import Layout from '../components/Layout'
 import Sidebar from '../components/Sidebar'
 
 export default function Tools() {
@@ -8,18 +7,18 @@ export default function Tools() {
   const recipe = router.query.recipe as string | undefined
 
   return (
-    <main className="container flex">
-      <Sidebar />
-      <div className="flex-1 p-4">
-        <NavBar />
-        <h2 className="mb-4">الأدوات الإضافية</h2>
-        {recipe ? (
-          <p>الوصفة المختارة: {recipe}</p>
-        ) : (
-          <p>اختر أداة من القائمة الجانبية.</p>
-        )}
+    <Layout>
+      <div className="flex">
+        <Sidebar />
+        <div className="flex-1 p-4">
+          <h2 className="mb-4 text-xl font-bold">الأدوات الإضافية</h2>
+          {recipe ? (
+            <p>الوصفة المختارة: {recipe}</p>
+          ) : (
+            <p>اختر أداة من القائمة الجانبية.</p>
+          )}
+        </div>
       </div>
-      <Footer />
-    </main>
+    </Layout>
   )
 }
