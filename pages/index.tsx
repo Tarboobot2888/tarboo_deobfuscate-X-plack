@@ -1,5 +1,6 @@
 // pages/index.tsx
 import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
 import { deobfuscateLocal } from "../lib/webcrack-wrapper";
 import axios from "axios";
 import Link from "next/link";
@@ -49,6 +50,18 @@ export default function Home() {
         </nav>
       </header>
 
+      <motion.section
+        className="hero"
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.7 }}
+      >
+        <h2>فكّ تشفير الكود بضغطة زر</h2>
+        <button className="start-btn" onClick={() => window.scrollTo({ top: 500, behavior: 'smooth' })}>
+          ابدأ الآن
+        </button>
+      </motion.section>
+
       <section>
         <label>ألصق الكود المشفر هنا:</label>
         <textarea
@@ -90,6 +103,17 @@ export default function Home() {
             <pre className="code-output">{output}</pre>
           </>
         )}
+      </section>
+
+      <section className="features-grid">
+        <div className="feature-item">
+          <h3>DeobfuscateJs</h3>
+          <p>خوارزميات متقدمة لفك التشويش عبر Web Workers.</p>
+        </div>
+        <div className="feature-item">
+          <h3>CyberChef</h3>
+          <p>تشغيل وصفات تحليل متعددة مثل Beautify وEval JS.</p>
+        </div>
       </section>
     </main>
   );

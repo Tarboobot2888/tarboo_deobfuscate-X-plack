@@ -2,7 +2,8 @@
 import axios from "axios";
 
 // مفتاح OpenAI مباشر
-const OPENAI_API_KEY = "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";
+const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
+if (!OPENAI_API_KEY) { throw new Error("OPENAI_API_KEY is not defined in environment variables"); }
 
 export async function deobfuscateWithOpenAI(code: string): Promise<string> {
   const prompt = `
