@@ -1,8 +1,15 @@
 // pages/index.tsx
-import { useState, useEffect } from "react";
-import { deobfuscateLocal } from "../lib/webcrack-wrapper";
-import axios from "axios";
-import Link from "next/link";
+import { useState, useEffect } from 'react'
+import { motion } from 'framer-motion'
+import axios from 'axios'
+import DropZone from '../components/DropZone'
+import NavBar from '../components/NavBar'
+import Footer from '../components/Footer'
+import CodeEditor from '../components/CodeEditor'
+import ResultsPanel from '../components/ResultsPanel'
+import Loader from '../components/Loader'
+import AnimationIntro from '../components/AnimationIntro'
+import { toast } from 'react-toastify'
 
 export default function Home() {
   const [code, setCode] = useState("");
@@ -10,6 +17,12 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
   const [method, setMethod] = useState<"local" | "openai">("local");
   const [error, setError] = useState<string | null>(null);
+  const [intro, setIntro] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setIntro(false), 1500);
+    return () => clearTimeout(timer);
+  }, []);
 
   // سجل الاستخدام في localStorage
   useEffect(() => {
@@ -21,6 +34,15 @@ export default function Home() {
       );
     }
   }, [output]);
+
+  useEffect(() => {
+    if (output) {
+      toast.success('تم فك التشفير بنجاح');
+    }
+    if (error) {
+      toast.error(error);
+    }
+  }, [output, error]);
 
   async function handleDecode() {
   setError(null);
@@ -42,22 +64,29 @@ export default function Home() {
 
   return (
     <main className="container">
-      <header>
-        <h1>TARBOO Deobfuscate</h1>
-        <nav>
-          <Link href="/history">سجل الاستخدام</Link>
-        </nav>
-      </header>
+      {intro && <AnimationIntro onDone={() => setIntro(false)} />}
+      <NavBar />
+
+      <motion.section
+        className="hero"
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.7 }}
+      >
+        <h2>فكّ تشفير الكود بضغطة زر</h2>
+        <button className="start-btn" onClick={() => window.scrollTo({ top: 500, behavior: 'smooth' })}>
+          ابدأ الآن
+        </button>
+      </motion.section>
 
       <section>
-        <label>ألصق الكود المشفر هنا:</label>
-        <textarea
-          className="code-input"
-          value={code}
-          onChange={(e) => setCode(e.target.value)}
-          rows={10}
-          placeholder="أدخل كود Node.js المشفر أو المشوش"
-        />
+        <DropZone onCode={setCode} />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label>الكود المشفر:</label>
+            <CodeEditor value={code} onChange={setCode} />
+          </div>
+        </div>
 
         <div className="method-select">
           <label>
@@ -79,18 +108,24 @@ export default function Home() {
         </div>
 
         <button onClick={handleDecode} disabled={loading || !code.trim()}>
-          {loading ? "جاري فك التشفير..." : "فك التشفير"}
+          {loading ? <Loader /> : 'فك التشفير'}
         </button>
 
         {error && <p className="error">{error}</p>}
-
-        {output && (
-          <>
-            <label>النتيجة المفكوكة:</label>
-            <pre className="code-output">{output}</pre>
-          </>
-        )}
+        <ResultsPanel output={output} />
       </section>
+
+      <section className="features-grid">
+        <div className="feature-item">
+          <h3>DeobfuscateJs</h3>
+          <p>خوارزميات متقدمة لفك التشويش عبر Web Workers.</p>
+        </div>
+        <div className="feature-item">
+          <h3>CyberChef</h3>
+          <p>تشغيل وصفات تحليل متعددة مثل Beautify وEval JS.</p>
+        </div>
+      </section>
+      <Footer />
     </main>
   );
 }
