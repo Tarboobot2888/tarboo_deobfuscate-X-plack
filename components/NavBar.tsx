@@ -8,9 +8,9 @@ export default function NavBar() {
         <h1 className="flex-1 text-lg font-bold text-cyan-400">TARBOO Deobfuscate</h1>
         <div className="flex gap-6 text-sm">
           <Link href="/">الرئيسية</Link>
-          <Link href="/tools">الأدوات</Link>
-          <Link href="/history">السجل</Link>
-          <Link href="/about">عن المشروع</Link>
+          <Link href="/deobfuscate">الأداة</Link>
+          <Link href="/about">عن المطور</Link>
+          <Link href="/contact">تواصل</Link>
         </div>
         <ThemeToggle />
       </div>

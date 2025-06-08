@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion'
 
-export default function Hero({ onStart }: { onStart: () => void }) {
+export default function HeroSection({ onStart }: { onStart: () => void }) {
   return (
     <section className="min-h-[60vh] flex flex-col items-center justify-center text-center rounded-xl bg-gradient-to-br from-purple-700/40 to-cyan-500/20 p-8 shadow-lg">
       <motion.h2
